@@ -1,0 +1,56 @@
+{
+    "name": "robertboes/laravel-cloudflare-proxies",
+    "description": "Trust Cloudflare's published ranges and the private proxy hop, so the client IP and scheme are right behind Cloudflare.",
+    "keywords": ["laravel", "cloudflare", "trusted-proxies", "x-forwarded-for"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Boes",
+            "email": "robert@hihaho.com"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "illuminate/console": "^12.0|^13.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "illuminate/http": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0",
+        "spatie/laravel-package-tools": "^1.92"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.24",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RobertBoes\\CloudflareProxies\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RobertBoes\\CloudflareProxies\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RobertBoes\\CloudflareProxies\\CloudflareProxiesServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "analyse": "phpstan analyse",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

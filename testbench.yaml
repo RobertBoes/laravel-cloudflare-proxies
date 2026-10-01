@@ -1,0 +1,2 @@
+providers:
+  - RobertBoes\CloudflareProxies\CloudflareProxiesServiceProvider

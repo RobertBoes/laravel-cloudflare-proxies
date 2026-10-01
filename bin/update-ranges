@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Fetches Cloudflare's ranges and rewrites resources/cloudflare-ips.json when the
+ * set changed. Run by the scheduled workflow; a non-zero exit fails it, so a
+ * broken source is noticed instead of leaving the snapshot quietly old.
+ */
+
+use Illuminate\Http\Client\Factory;
+use RobertBoes\CloudflareProxies\Ranges\RangeFetcher;
+use RobertBoes\CloudflareProxies\Ranges\Snapshot;
+
+require __DIR__.'/../vendor/autoload.php';
+
+try {
+    $fetched = (new RangeFetcher(new Factory))->fetch();
+} catch (Throwable $exception) {
+    fwrite(STDERR, "Cloudflare's ranges could not be fetched: {$exception->getMessage()}\n");
+
+    exit(1);
+}
+
+$current = file_exists(Snapshot::PATH) ? Snapshot::load() : null;
+
+if ($current?->sameRangesAs($fetched)) {
+    echo "Unchanged since {$current->fetchedAt}.\n";
+
+    exit(0);
+}
+
+Snapshot::write($fetched);
+
+echo sprintf("Updated: %d IPv4 and %d IPv6 ranges.\n", count($fetched->ipv4), count($fetched->ipv6));
