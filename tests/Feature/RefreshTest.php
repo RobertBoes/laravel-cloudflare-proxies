@@ -67,6 +67,21 @@ it('keeps the last good list when Cloudflare answers with something implausible'
     'a range containing a reserved one' => '192.0.0.0/12',
 ]);
 
+it('rejects private and reserved IPv6 ranges', function (string $ipv6) {
+    config()->set('cloudflare-proxies.refresh', true);
+    fakeCloudflare("173.245.48.0/20\n", $ipv6);
+
+    $this->artisan('cloudflare-proxies:refresh')->assertFailed();
+
+    expect(app(RefreshedRanges::class)->get())->toBeNull();
+})->with([
+    'unique local' => 'fc00::/32',
+    'Teredo' => '2001::/32',
+    '6to4' => '2002::/32',
+    'documentation' => '2001:db8::/32',
+    'multicast' => 'ff00::/32',
+]);
+
 it('rejects an IPv6 list that is too wide', function () {
     config()->set('cloudflare-proxies.refresh', true);
     fakeCloudflare("173.245.48.0/20\n", "::/0\n");

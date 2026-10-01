@@ -9,12 +9,37 @@ final class RangeParser
 {
     /**
      * Ranges no Cloudflare edge lives in. A list that touches one is refused,
-     * because trusting it would skip real clients in the walk.
+     * because trusting it would skip real clients in the walk. Spelled out rather
+     * than taken from Symfony's PRIVATE_SUBNETS, which is shorter in the Symfony
+     * versions Laravel 12 allows (no carrier-grade NAT, no documentation ranges).
      */
     private const array RESERVED = [
-        ...IpUtils::PRIVATE_SUBNETS,
-        '224.0.0.0/4',
-        'ff00::/8',
+        '0.0.0.0/8',       // "this network"
+        '10.0.0.0/8',      // private
+        '100.64.0.0/10',   // carrier-grade NAT
+        '127.0.0.0/8',     // loopback
+        '169.254.0.0/16',  // link-local
+        '172.16.0.0/12',   // private
+        '192.0.0.0/24',    // IETF protocol assignments
+        '192.0.2.0/24',    // documentation
+        '192.168.0.0/16',  // private
+        '198.18.0.0/15',   // benchmarking
+        '198.51.100.0/24', // documentation
+        '203.0.113.0/24',  // documentation
+        '224.0.0.0/4',     // multicast
+        '240.0.0.0/4',     // reserved, and broadcast
+        '::/96',           // unspecified and IPv4-compatible
+        '::ffff:0:0/96',   // IPv4-mapped
+        '64:ff9b::/96',    // NAT64
+        '64:ff9b:1::/48',  // NAT64 local use
+        '100::/64',        // discard
+        '2001::/32',       // Teredo
+        '2001:2::/48',     // benchmarking
+        '2001:db8::/32',   // documentation
+        '2002::/16',       // 6to4
+        'fc00::/7',        // unique local
+        'fe80::/10',       // link-local
+        'ff00::/8',        // multicast
     ];
 
     /**
