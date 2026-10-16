@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Lets update-ranges.yml run CI on the PR it opens with GITHUB_TOKEN.
+  workflow_dispatch:
 
 jobs:
   tests:
